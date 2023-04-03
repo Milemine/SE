@@ -1,0 +1,60 @@
+# importing the necessary modules
+
+import tkinter as tk
+from tkinter import *
+import mysql.connector
+
+root = Tk()
+root.title("BOOK ISSUING SYSTEM")
+
+# creating the database
+connection = mysql.connector.connect(
+    host='localhost',
+    user='root',
+    password='',
+    port='3306',
+    database='library'
+)
+
+# creating the cursor object
+cursor = connection.cursor()
+
+bkg = "#636e72"
+frame = tk.Frame(root, bg=bkg)
+
+label_book_id = tk.Label(frame, text="Book ID: ", font=('verdana', 12), bg=bkg)
+entry_book_id = tk.Entry(frame, font=('verdana', 12))
+
+label_title = tk.Label(frame, text="Title: ", font=('verdana', 12), bg=bkg)
+entry_title = tk.Entry(frame, font=('verdana', 12))
+
+label_author = tk.Label(frame, text="Author: ", font=('verdana', 12), bg=bkg)
+entry_author = tk.Entry(frame, font=('verdana', 12))
+
+
+def add_book():
+    book_id = entry_book_id.get()
+    title = entry_title.get()
+    author = entry_author.get()
+
+    insert_query = "INSERT INTO `books`(`book_id`, `title`, `author`) VALUES (%s,%s,%s)"
+    vals = (book_id, title, author)
+    cursor.execute(insert_query, vals)
+    connection.commit()
+
+
+button_insert = tk.Button(frame, text='Insert', font=('verdana', 14), bg='orange', command=add_book)
+
+label_book_id.grid(row=0, column=0)
+entry_book_id.grid(row=0, column=1, pady=10, padx=10, sticky='e')
+
+label_title.grid(row=1, column=0)
+entry_title.grid(row=1, column=1, pady=10, padx=10, sticky='e')
+
+label_author.grid(row=2, column=0)
+entry_author.grid(row=2, column=1, pady=10, padx=10, sticky='e')
+
+button_insert.grid(row=5, column=0, columnspan=2, pady=10, padx=10, sticky="snew")
+
+frame.grid(row=0, column=0)
+root.mainloop()

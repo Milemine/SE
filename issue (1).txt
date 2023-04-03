@@ -1,0 +1,66 @@
+import tkinter as tk
+from tkinter import *
+import mysql.connector
+
+root = Tk()
+root.title("BOOK ISSUING SYSTEM")
+
+connection = mysql.connector.connect(
+    host='localhost',
+    user='root',
+    password='',
+    port='3306',
+    database='library'
+)
+
+# creating the cursor object
+cursor = connection.cursor()
+
+bkg = "#636e72"
+frame = tk.Frame(root, bg=bkg)
+
+
+label_book_id = tk.Label(frame, text="Book ID: ", font=('verdana', 12), bg=bkg)
+entry_book_id = tk.Entry(frame, font=('verdana', 12))
+
+label_student_id = tk.Label(frame, text="Student ID: ", font=('verdana', 12), bg=bkg)
+entry_student_id = tk.Entry(frame, font=('verdana', 12))
+
+label_staff_id = tk.Label(frame, text="staff ID: ", font=('verdana', 12), bg=bkg)
+entry_staff_id = tk.Entry(frame, font=('verdana', 12))
+
+label_issue_date = tk.Label(frame, text="Issue Date: ", font=('verdana', 12), bg=bkg)
+entry_issue_date = tk.Entry(frame, font=('verdana', 12))
+
+
+def issue_book():
+    book_id = entry_book_id.get()
+    student_id = entry_student_id.get()
+    staff_id = entry_staff_id.get()
+    issue_date = entry_issue_date.get()
+
+    issue_query = "INSERT INTO `issued_books`(`book_id`, `student_id`, `staff_id`, `issue_date`) VALUES(%s,%s,%s,%s)"
+    values = (book_id, student_id, staff_id, issue_date)
+    cursor.execute(issue_query, values)
+    connection.commit()
+
+
+button_issue = tk.Button(frame, text='Issue', font=('verdana', 14), bg='red', command=issue_book)
+
+
+label_book_id.grid(row=0, column=0)
+entry_book_id.grid(row=0, column=1, pady=10, padx=10, sticky='e')
+
+label_student_id.grid(row=1, column=0)
+entry_student_id.grid(row=1, column=1, pady=10, padx=10, sticky='e')
+
+label_staff_id.grid(row=2, column=0)
+entry_staff_id.grid(row=2, column=1, pady=10, padx=10, sticky='e')
+
+label_issue_date.grid(row=3, column=0)
+entry_issue_date.grid(row=3, column=1, pady=10, padx=10, sticky='e')
+
+button_issue.grid(row=4, column=0, columnspan=2, pady=10, padx=10, sticky="snew")
+
+frame.grid(row=0, column=0)
+root.mainloop()
